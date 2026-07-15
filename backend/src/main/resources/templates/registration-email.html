@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to PG Made Easy!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .header {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .content {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #ff6b00;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Welcome to PG Made Easy!</h1>
+    </div>
+    
+    <div class="content">
+        <p>Dear <span th:text="${name}">User</span>,</p>
+        
+        <p>Thank you for registering with PG Made Easy! We're excited to have you on board as a <span th:text="${userType}">user</span>.</p>
+        
+        <p>Your account has been successfully created. You can now:</p>
+        <ul>
+            <li>Log in to your account</li>
+            <li>Complete your profile</li>
+            <li>Start using our platform</li>
+        </ul>
+        
+        <p>Click the button below to log in to your account:</p>
+        
+        <div style="text-align: center;">
+            <a th:href="${loginUrl}" class="button">Log In to Your Account</a>
+        </div>
+        
+        <p>If you have any questions or need assistance, please don't hesitate to contact our support team.</p>
+        
+        <p>Best regards,<br>The PG Made Easy Team</p>
+    </div>
+    
+    <div class="footer">
+        <p>This is an automated message, please do not reply to this email.</p>
+    </div>
+</body>
+</html> 

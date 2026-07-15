@@ -1,0 +1,78 @@
+{
+  "groups": [
+    {
+      "name": "cloudinary",
+      "type": "com.pgmadeeazy.properties.CloudinaryProperties",
+      "sourceType": "com.pgmadeeazy.properties.CloudinaryProperties"
+    },
+    {
+      "name": "jwt",
+      "type": "com.pgmadeeazy.config.JwtConfig",
+      "sourceType": "com.pgmadeeazy.config.JwtConfig"
+    },
+    {
+      "name": "property",
+      "type": "com.pgmadeeazy.config.PropertySettings",
+      "sourceType": "com.pgmadeeazy.config.PropertySettings"
+    }
+  ],
+  "properties": [
+    {
+      "name": "cloudinary.allowed-types",
+      "type": "java.lang.String",
+      "sourceType": "com.pgmadeeazy.properties.CloudinaryProperties"
+    },
+    {
+      "name": "cloudinary.api-key",
+      "type": "java.lang.String",
+      "sourceType": "com.pgmadeeazy.properties.CloudinaryProperties"
+    },
+    {
+      "name": "cloudinary.api-secret",
+      "type": "java.lang.String",
+      "sourceType": "com.pgmadeeazy.properties.CloudinaryProperties"
+    },
+    {
+      "name": "cloudinary.cloud-name",
+      "type": "java.lang.String",
+      "sourceType": "com.pgmadeeazy.properties.CloudinaryProperties"
+    },
+    {
+      "name": "cloudinary.folder",
+      "type": "java.lang.String",
+      "sourceType": "com.pgmadeeazy.properties.CloudinaryProperties"
+    },
+    {
+      "name": "cloudinary.max-size",
+      "type": "java.lang.Long",
+      "sourceType": "com.pgmadeeazy.properties.CloudinaryProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "jwt.expiration",
+      "type": "java.lang.Long",
+      "sourceType": "com.pgmadeeazy.config.JwtConfig"
+    },
+    {
+      "name": "jwt.secret",
+      "type": "java.lang.String",
+      "sourceType": "com.pgmadeeazy.config.JwtConfig"
+    },
+    {
+      "name": "property.image-folder",
+      "type": "java.lang.String",
+      "sourceType": "com.pgmadeeazy.config.PropertySettings"
+    },
+    {
+      "name": "property.image-size",
+      "type": "java.lang.Long",
+      "sourceType": "com.pgmadeeazy.config.PropertySettings"
+    },
+    {
+      "name": "property.location-radius",
+      "type": "java.lang.Integer",
+      "sourceType": "com.pgmadeeazy.config.PropertySettings"
+    }
+  ],
+  "hints": []
+}
