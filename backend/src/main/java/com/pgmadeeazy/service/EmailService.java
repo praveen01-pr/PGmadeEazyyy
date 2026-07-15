@@ -48,9 +48,8 @@ public class EmailService {
 
             mailSender.send(message);
             logger.info("Email sent successfully to: {}", to);
-        } catch (MessagingException e) {
-            logger.error("Failed to send email to: {}", to, e);
-            throw new RuntimeException("Failed to send email: " + e.getMessage(), e);
+        } catch (Exception e) {
+            logger.error("Failed to send email to: {}. Registration will proceed.", to, e);
         }
     }
 } 
