@@ -101,15 +101,17 @@ const FindPG = () => {
   };
 
   const filteredProperties = properties.filter(property => {
-    const matchesSearch = property.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         property.area.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCity = !selectedCity || property.city.toLowerCase() === selectedCity.toLowerCase();
+    const matchesSearch = !searchTerm || 
+                         (property.name && property.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+                         (property.area && property.area.toLowerCase().includes(searchTerm.toLowerCase()));
+    const matchesCity = !selectedCity || 
+                       (property.city && property.city.toLowerCase() === selectedCity.toLowerCase());
     const matchesPrice = (!priceRange.min || property.rent >= Number(priceRange.min)) &&
                         (!priceRange.max || property.rent <= Number(priceRange.max));
     return matchesSearch && matchesCity && matchesPrice;
   });
 
-  const cities = [...new Set(properties.map(property => property.city))];
+  const cities = [...new Set(properties.filter(p => p.city).map(property => property.city))];
 
   if (loading) {
     return (
