@@ -26,92 +26,123 @@ public class PgMadeEazyApplication {
     @Bean
     CommandLineRunner initDatabase(PropertyRepository propertyRepository) {
         return args -> {
-            if (propertyRepository.count() == 0) {
-                System.out.println("Seeding database with premium OYO-style properties...");
+            // Clear existing properties and seed fresh premium hostel data with realistic pricing and photos
+            System.out.println("Refreshing and seeding database with premium OYO-style PGs...");
+            propertyRepository.deleteAll();
 
-                Property p1 = new Property();
-                p1.setName("OYO Life - Dublin House");
-                p1.setDescription("Premium fully furnished coliving rooms for students and working professionals. Located in the heart of the city with excellent connectivity, daily housekeeping, high-speed WiFi, and home-cooked meals included.");
-                p1.setCity("Bangalore");
-                p1.setArea("Koramangala");
-                p1.setRent(6500.0);
-                p1.setDeposit(12000.0);
-                p1.setRooms(8);
-                p1.setRoomTypes(Arrays.asList("Single sharing", "Double sharing"));
-                p1.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Security", "Laundry"));
-                p1.setRules(Arrays.asList("No smoking inside rooms", "Visitor entry allowed until 10 PM", "Quiet hours after 11 PM"));
-                p1.setOwnerId("64d1f2e15bc3251234a56b78");
-                p1.setOwnerName("Praveen Prakash");
-                p1.setOwnerPhone("9876543210");
-                p1.setOwnerEmail("praveen@gmail.com");
-                p1.setCategory("Unisex");
-                p1.setImages(Arrays.asList(
-                    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=600&q=80"
-                ));
-                p1.setApprovalStatus(ApprovalStatus.APPROVED);
-                p1.setCreatedAt(new Date());
-                p1.setUpdatedAt(new Date());
-                p1.setApprovedAt(new Date());
-                p1.setApprovedBy("admin");
-                propertyRepository.save(p1);
+            // 1. Hyderabad Budget PG (Under 8000)
+            Property p1 = new Property();
+            p1.setName("OYO Life - Gachibowli Hub");
+            p1.setDescription("Excellent budget coliving space for boys/working professionals near DLF Cybercity. Fully furnished rooms, 24/7 high-speed Wi-Fi, laundry service, CCTV security, and delicious home-cooked meals included.");
+            p1.setCity("Hyderabad");
+            p1.setArea("Gachibowli");
+            p1.setRent(6800.0);
+            p1.setDeposit(10000.0);
+            p1.setRooms(15);
+            p1.setRoomTypes(Arrays.asList("Double sharing", "Triple sharing"));
+            p1.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Security", "Laundry", "Parking"));
+            p1.setRules(Arrays.asList("No smoking inside", "Visitor curfew at 10 PM"));
+            p1.setOwnerId("owner1");
+            p1.setOwnerName("Praveen Prakash");
+            p1.setOwnerPhone("+91 94412 12345");
+            p1.setOwnerEmail("praveen.hyd@pgmadeeazy.com");
+            p1.setCategory("Boys");
+            p1.setImages(Arrays.asList(
+                "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80",
+                "https://images.unsplash.com/photo-1626125345510-4603468eedfb?auto=format&fit=crop&w=600&q=80"
+            ));
+            p1.setApprovalStatus(ApprovalStatus.APPROVED);
+            p1.setCreatedAt(new Date());
+            p1.setUpdatedAt(new Date());
+            p1.setApprovedAt(new Date());
+            p1.setApprovedBy("admin");
+            propertyRepository.save(p1);
 
-                Property p2 = new Property();
-                p2.setName("Stanza Living - Orchid House");
-                p2.setDescription("A premium girls coliving PG with top-notch security features. Features spacious common rooms, fully functional fitness center, gaming lounge, and laundry facilities. Healthy meals served thrice a day.");
-                p2.setCity("Bangalore");
-                p2.setArea("Indiranagar");
-                p2.setRent(8500.0);
-                p2.setDeposit(15000.0);
-                p2.setRooms(12);
-                p2.setRoomTypes(Arrays.asList("Single sharing", "Double sharing", "Triple sharing"));
-                p2.setAmenities(Arrays.asList("Wi-Fi", "Food", "Gym", "Security", "Laundry", "TV"));
-                p2.setRules(Arrays.asList("Gate closing time at 10:30 PM", "No outsiders allowed in rooms", "Maintain hygiene in common spaces"));
-                p2.setOwnerId("64d1f2e15bc3251234a56b78");
-                p2.setOwnerName("Praveen Prakash");
-                p2.setOwnerPhone("9876543210");
-                p2.setOwnerEmail("praveen@gmail.com");
-                p2.setCategory("Girls");
-                p2.setImages(Arrays.asList(
-                    "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=600&q=80"
-                ));
-                p2.setApprovalStatus(ApprovalStatus.APPROVED);
-                p2.setCreatedAt(new Date());
-                p2.setUpdatedAt(new Date());
-                p2.setApprovedAt(new Date());
-                p2.setApprovedBy("admin");
-                propertyRepository.save(p2);
+            // 2. Hyderabad Premium PG (Above 8000)
+            Property p2 = new Property();
+            p2.setName("Isthara IT Coliving Nest");
+            p2.setDescription("Premium luxury coliving space in the heart of Gachibowli. Ideal for IT professionals working in Hitec City. Includes swimming pool access, fully equipped gym, three-tier buffet meals, laundry, and housekeeping.");
+            p2.setCity("Hyderabad");
+            p2.setArea("Gachibowli");
+            p2.setRent(14500.0);
+            p2.setDeposit(30000.0);
+            p2.setRooms(10);
+            p2.setRoomTypes(Arrays.asList("Single Room", "Double sharing"));
+            p2.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Gym", "Security", "Laundry", "Swimming Pool"));
+            p2.setRules(Arrays.asList("No drinking inside rooms", "Guests restricted after 10 PM"));
+            p2.setOwnerId("owner2");
+            p2.setOwnerName("Kalyan Reddy");
+            p2.setOwnerPhone("+91 90000 54321");
+            p2.setOwnerEmail("kalyan@pgmadeeazy.com");
+            p2.setCategory("Unisex");
+            p2.setImages(Arrays.asList(
+                "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=600&q=80",
+                "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80"
+            ));
+            p2.setApprovalStatus(ApprovalStatus.APPROVED);
+            p2.setCreatedAt(new Date());
+            p2.setUpdatedAt(new Date());
+            p2.setApprovedAt(new Date());
+            p2.setApprovedBy("admin");
+            propertyRepository.save(p2);
 
-                Property p3 = new Property();
-                p3.setName("OYO Coliving - Adyar Nest");
-                p3.setDescription("A modern, tech-enabled coliving facility for boys. Complete with smart locks, common study tables, high-speed business WiFi, laundry service, and healthy traditional South Indian meals.");
-                p3.setCity("Chennai");
-                p3.setArea("Adyar");
-                p3.setRent(5500.0);
-                p3.setDeposit(10000.0);
-                p3.setRooms(6);
-                p3.setRoomTypes(Arrays.asList("Double sharing", "Triple sharing"));
-                p3.setAmenities(Arrays.asList("Wi-Fi", "Food", "Security", "Laundry"));
-                p3.setRules(Arrays.asList("No smoking/drinking allowed", "Visitors entry allowed in common lounge only", "Inform warden before night-out"));
-                p3.setOwnerId("64d1f2e15bc3251234a56b79");
-                p3.setOwnerName("Rakesh Kumar");
-                p3.setOwnerPhone("9988776655");
-                p3.setOwnerEmail("rakesh@gmail.com");
-                p3.setCategory("Boys");
-                p3.setImages(Arrays.asList(
-                    "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=600&q=80",
-                    "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80"
-                ));
-                p3.setApprovalStatus(ApprovalStatus.APPROVED);
-                p3.setCreatedAt(new Date());
-                p3.setUpdatedAt(new Date());
-                p3.setApprovedAt(new Date());
-                p3.setApprovedBy("admin");
-                propertyRepository.save(p3);
+            // 3. Bangalore Budget PG (Under 8000)
+            Property p3 = new Property();
+            p3.setName("Stanza Living - Dublin Student House");
+            p3.setDescription("Super neat and fully managed PG for students in Koramangala. Includes three daily meals, high speed internet, biometric attendance, professional laundry, and 24/7 security warden.");
+            p3.setCity("Bangalore");
+            p3.setArea("Koramangala");
+            p3.setRent(7500.0);
+            p3.setDeposit(15000.0);
+            p3.setRooms(18);
+            p3.setRoomTypes(Arrays.asList("Double sharing", "Triple sharing"));
+            p3.setAmenities(Arrays.asList("Wi-Fi", "Food", "Security", "Laundry", "Water Purifier"));
+            p3.setRules(Arrays.asList("Curfew at 10:30 PM", "No outsiders allowed in rooms"));
+            p3.setOwnerId("owner1");
+            p3.setOwnerName("Praveen Prakash");
+            p3.setOwnerPhone("+91 94412 12345");
+            p3.setOwnerEmail("praveen.blr@pgmadeeazy.com");
+            p3.setCategory("Boys");
+            p3.setImages(Arrays.asList(
+                "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80",
+                "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=600&q=80"
+            ));
+            p3.setApprovalStatus(ApprovalStatus.APPROVED);
+            p3.setCreatedAt(new Date());
+            p3.setUpdatedAt(new Date());
+            p3.setApprovedAt(new Date());
+            p3.setApprovedBy("admin");
+            propertyRepository.save(p3);
 
-                System.out.println("Database seeded successfully!");
-            }
+            // 4. Chennai Girls PG (Under 8000)
+            Property p4 = new Property();
+            p4.setName("Zolo Coliving - Adyar Rose House");
+            p4.setDescription("Highly secure and home-like girls PG in Adyar. Features air-conditioned rooms, daily professional cleaning, nutritious meals, study desks, laundry, and fingerprint access gate control.");
+            p4.setCity("Chennai");
+            p4.setArea("Adyar");
+            p4.setRent(7200.0);
+            p4.setDeposit(12000.0);
+            p4.setRooms(12);
+            p4.setRoomTypes(Arrays.asList("Double sharing", "Triple sharing"));
+            p4.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Security", "Laundry"));
+            p4.setRules(Arrays.asList("Gate closing at 10 PM", "Quiet hours after 11 PM"));
+            p4.setOwnerId("owner3");
+            p4.setOwnerName("Srinivasan Iyer");
+            p4.setOwnerPhone("+91 98840 98840");
+            p4.setOwnerEmail("srini@pgmadeeazy.com");
+            p4.setCategory("Girls");
+            p4.setImages(Arrays.asList(
+                "https://images.unsplash.com/photo-1626125345510-4603468eedfb?auto=format&fit=crop&w=600&q=80",
+                "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80"
+            ));
+            p4.setApprovalStatus(ApprovalStatus.APPROVED);
+            p4.setCreatedAt(new Date());
+            p4.setUpdatedAt(new Date());
+            p4.setApprovedAt(new Date());
+            p4.setApprovedBy("admin");
+            propertyRepository.save(p4);
+
+            System.out.println("Seeding completed successfully!");
         };
     }
 }
