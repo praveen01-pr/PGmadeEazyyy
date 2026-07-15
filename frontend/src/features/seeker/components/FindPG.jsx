@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { MapPin, Users, DollarSign, Building, Phone, Mail, Clock, User, Search, ArrowLeft, Star, Heart } from 'lucide-react';
 import { propertyApi, seekerApi } from '../../../services/api';
 import { useAuth } from '../../../context/AuthContext';
@@ -8,15 +8,16 @@ import PropertyDetails from './PropertyDetails';
 
 const FindPG = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const [savedIds, setSavedIds] = useState([]);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState({});
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCity, setSelectedCity] = useState('');
-  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [selectedCity, setSelectedCity] = useState(searchParams.get('city') || '');
+  const [priceRange, setPriceRange] = useState({ min: searchParams.get('min') || '', max: searchParams.get('max') || '' });
   const [selectedProperty, setSelectedProperty] = useState(null);
 
   useEffect(() => {
@@ -274,14 +275,33 @@ const FindPG = () => {
                       <MapPin className="w-4 h-4 text-orange-500" />
                       <span>{property.city}, {property.area}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <DollarSign className="w-4 h-4 text-orange-500" />
-                      <span>₹{property.rent}/month</span>
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-xl font-extrabold text-orange-500">₹{property.rent}</span>
+                      <span className="text-xs text-zinc-500 line-through">₹{Math.round(property.rent * 1.4)}</span>
+                      <span className="text-xxs font-bold text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded">40% OFF</span>
+                      <span className="text-xxs text-zinc-400">/mo</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <Users className="w-4 h-4 text-orange-500" />
-                      <span>{property.rooms} rooms</span>
+                      <span>{property.rooms} rooms available</span>
                     </div>
+                  </div>
+
+                  {/* OYO Amenity Badges */}
+                  <div className="flex flex-wrap gap-1.5 mt-3">
+                    {property.amenities && property.amenities.length > 0 ? (
+                      property.amenities.slice(0, 3).map((amenity, i) => (
+                        <span key={i} className="text-xxs px-2 py-0.5 bg-zinc-900 text-zinc-300 rounded border border-zinc-800">
+                          {amenity}
+                        </span>
+                      ))
+                    ) : (
+                      <>
+                        <span className="text-xxs px-2 py-0.5 bg-zinc-900 text-zinc-300 rounded border border-zinc-800">Free Wi-Fi</span>
+                        <span className="text-xxs px-2 py-0.5 bg-zinc-900 text-zinc-300 rounded border border-zinc-800">AC Rooms</span>
+                        <span className="text-xxs px-2 py-0.5 bg-zinc-900 text-zinc-300 rounded border border-zinc-800">CCTV Security</span>
+                      </>
+                    )}
                   </div>
 
                   {/* Owner Info */}

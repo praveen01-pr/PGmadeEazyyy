@@ -1,92 +1,184 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Search, Shield, UserCircle2 } from "lucide-react";
+import { Search, MapPin, Shield, Star, CheckCircle, Percent, Compass, ShieldCheck } from "lucide-react";
 
-const features = [
+const popularCities = [
+  { name: "Bangalore", label: "Bangalore" },
+  { name: "Chennai", label: "Chennai" },
+  { name: "Delhi", label: "Delhi" },
+  { name: "Hyderabad", label: "Hyderabad" },
+  { name: "Mumbai", label: "Mumbai" },
+  { name: "Pune", label: "Pune" },
+];
+
+const trustPoints = [
   {
-    icon: Search,
-    title: "Smart Search",
-    description: "Find PGs based on location, price, amenities, and more with our advanced search filters.",
+    icon: ShieldCheck,
+    title: "100% Verified PGs",
+    desc: "Every property goes through strict physical verification.",
   },
   {
-    icon: UserCircle2,
-    title: "Verified Hosts",
-    description: "All our PG owners are verified to ensure a safe and reliable booking experience.",
+    icon: Percent,
+    title: "Best Price Guarantee",
+    desc: "No agent fees, no hidden costs. Lowest deposit rates.",
   },
   {
-    icon: Shield,
-    title: "Secure Booking",
-    description: "Book your PG with confidence using our secure payment system and booking protection.",
+    icon: Star,
+    title: "Guest Rated Stays",
+    desc: "Browse authentic reviews and star ratings from students.",
   },
 ];
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [city, setCity] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const params = new URLSearchParams();
+    if (search.trim()) params.append("search", search.trim());
+    if (city) params.append("city", city);
+    if (maxPrice) params.append("max", maxPrice);
+    navigate(`/find-pg?${params.toString()}`);
+  };
+
+  const handleCityClick = (cityName) => {
+    navigate(`/find-pg?city=${cityName}`);
+  };
 
   return (
-    <div className="min-h-screen bg-black">
-      {/* Hero Section */}
-      <section className="bg-black/90 backdrop-blur-lg px-4 py-20">
-        <div className="container mx-auto flex flex-col items-center text-center gap-6">
-          
-          {/* Hero Title */}
-          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl">
-            Find Your Perfect <span className="text-orange-500">PG Accommodation</span>
+    <div className="min-h-screen bg-black text-white">
+      {/* Sub-header: Curated OYO Cities Bar */}
+      <div className="w-full bg-zinc-950/80 border-b border-orange-600/30 overflow-x-auto whitespace-nowrap py-3 px-6 scrollbar-none flex justify-center gap-8">
+        {popularCities.map((item) => (
+          <button
+            key={item.name}
+            onClick={() => handleCityClick(item.name)}
+            className="text-sm font-semibold text-gray-400 hover:text-orange-500 transition-colors flex items-center gap-1 cursor-pointer"
+          >
+            <MapPin className="w-3.5 h-3.5 text-orange-500" />
+            {item.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Hero Banner Section */}
+      <section className="relative py-20 md:py-32 flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-zinc-900 via-black to-black border-b border-orange-600/20 px-4">
+        <div className="container mx-auto max-w-4xl text-center flex flex-col gap-6">
+          <span className="text-orange-500 text-xs md:text-sm font-bold tracking-widest uppercase bg-orange-600/10 px-4 py-1.5 rounded-full inline-block mx-auto border border-orange-500/25">
+            Premium Coliving & PG Stays
+          </span>
+          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
+            Find Sanitized, Affordable <br className="hidden sm:block" />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-amber-400">
+              PG Accommodations
+            </span>
           </h1>
-          
-          {/* Hero Subtitle */}
-          <p className="max-w-2xl text-lg text-gray-400">
-            Discover comfortable and affordable PG accommodations in your preferred location. Verified listings, instant
-            booking, and hassle-free stay.
+          <p className="max-w-xl mx-auto text-sm sm:text-base text-gray-400">
+            Book trusted, fully-managed single or sharing rooms. No brokerage, flexible deposits, WiFi, power-backup & food included.
           </p>
 
-          {/* Hero Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-4">
-            
-            {/* Search PGs Button */}
-            <button 
-              onClick={() => navigate('/find-pg')}
-              className="flex items-center justify-center gap-2 rounded-md bg-orange-500 px-6 py-3 text-black font-medium shadow-md shadow-orange-600/30 transition-all duration-300 hover:bg-orange-600 hover:scale-105 active:scale-95 cursor-pointer"
-            >
-              <Search className="h-5 w-5" />
-              Search PGs
-            </button>
+          {/* OYO-style Search Box Card */}
+          <form
+            onSubmit={handleSearchSubmit}
+            className="w-full max-w-3xl mx-auto bg-zinc-900/90 backdrop-blur-xl border border-orange-600 p-4 md:p-6 rounded-2xl shadow-2xl shadow-orange-600/10 mt-8 grid grid-cols-1 md:grid-cols-4 gap-4 items-center text-left"
+          >
+            {/* Search Input */}
+            <div className="relative">
+              <label className="text-xxs font-bold text-orange-500 uppercase block mb-1">Locality / Area</label>
+              <input
+                type="text"
+                placeholder="Search location..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full py-2 bg-transparent text-white border-b border-zinc-700 focus:border-orange-500 focus:outline-none text-sm placeholder-zinc-500"
+              />
+            </div>
 
-            {/* List Your Property Button */}
-            <button 
-              onClick={() => navigate('/provider-dashboard/add-property')}
-              className="rounded-md border border-orange-500 px-6 py-3 text-orange-500 font-medium transition-all duration-300 hover:bg-orange-600 hover:text-black hover:scale-105 active:scale-95 cursor-pointer"
-            >
-              List Your Property
-            </button>
+            {/* City Dropdown */}
+            <div className="relative">
+              <label className="text-xxs font-bold text-orange-500 uppercase block mb-1">City</label>
+              <select
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                className="w-full py-2 bg-transparent text-white border-b border-zinc-700 focus:border-orange-500 focus:outline-none text-sm cursor-pointer"
+              >
+                <option value="" className="bg-zinc-900 text-zinc-400">All Cities</option>
+                {popularCities.map((c) => (
+                  <option key={c.name} value={c.name} className="bg-zinc-900 text-white">
+                    {c.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Price Limit */}
+            <div className="relative">
+              <label className="text-xxs font-bold text-orange-500 uppercase block mb-1">Max Rent</label>
+              <select
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
+                className="w-full py-2 bg-transparent text-white border-b border-zinc-700 focus:border-orange-500 focus:outline-none text-sm cursor-pointer"
+              >
+                <option value="" className="bg-zinc-900 text-zinc-400">No Limit</option>
+                <option value="5000" className="bg-zinc-900 text-white">Under ₹5,000</option>
+                <option value="8000" className="bg-zinc-900 text-white">Under ₹8,000</option>
+                <option value="12000" className="bg-zinc-900 text-white">Under ₹12,000</option>
+                <option value="18000" className="bg-zinc-900 text-white">Under ₹18,000</option>
+              </select>
+            </div>
+
+            {/* Search Button */}
+            <div>
+              <button
+                type="submit"
+                className="w-full h-12 bg-gradient-to-r from-orange-600 to-amber-500 text-black font-extrabold rounded-xl transition hover:opacity-90 hover:scale-102 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-orange-600/25"
+              >
+                <Search className="w-5 h-5 text-black font-bold" />
+                Find PG
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      {/* Trust Points (OYO Trust badges) */}
+      <section className="py-16 bg-black">
+        <div className="container mx-auto px-4 max-w-5xl">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {trustPoints.map((item, idx) => (
+              <div
+                key={idx}
+                className="flex items-start gap-4 p-5 bg-zinc-950 border border-orange-600/20 rounded-xl hover:border-orange-500/40 transition duration-300"
+              >
+                <div className="p-3 bg-orange-600/10 rounded-lg">
+                  <item.icon className="w-6 h-6 text-orange-500" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-white mb-1">{item.title}</h4>
+                  <p className="text-gray-400 text-xs sm:text-sm leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-20 bg-black/90 backdrop-blur-lg">
-        <div className="container mx-auto px-4">
-          
-          {/* Section Heading */}
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold text-white sm:text-4xl">Key Features</h2>
-            <p className="mt-4 text-lg text-gray-400">
-              Everything you need to find or list PG accommodations, all in one platform.
-            </p>
+      {/* OYO-inspired "Ready to List" banner */}
+      <section className="py-12 bg-zinc-950 border-t border-orange-600/20">
+        <div className="container mx-auto px-4 max-w-4xl flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h3 className="text-xl font-bold text-white">Earn double income from your property!</h3>
+            <p className="text-gray-400 text-sm mt-1">Convert your space into a premium coliving home with zero hassle.</p>
           </div>
-
-          {/* Features Grid */}
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {features.map((feature, index) => (
-              <div 
-                key={index} 
-                className="flex flex-col items-center text-center p-6 rounded-xl border border-orange-600 bg-black/80 shadow-md shadow-orange-600/20 transition-transform duration-300 hover:scale-105"
-              >
-                <feature.icon className="h-12 w-12 text-orange-500 mb-4 animate-pulse hover:animate-spin transition-transform duration-300" />
-                <h3 className="text-xl font-semibold text-white mb-2">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
-              </div>
-            ))}
-          </div>
+          <button
+            onClick={() => navigate("/provider-dashboard/add-property")}
+            className="px-6 py-3 border border-orange-500 text-orange-500 hover:bg-orange-600 hover:text-black font-bold rounded-xl transition duration-300 cursor-pointer"
+          >
+            Register as Host
+          </button>
         </div>
       </section>
     </div>
