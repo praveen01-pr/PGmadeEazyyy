@@ -183,7 +183,7 @@ const MultiStepRegistration = () => {
           }
         });
         
-        if (response.status === 200) {
+        if (response.status === 200 || response.status === 201) {
           setMessage("Registration successful! Redirecting to login page...");
           // Add a small delay before navigation for better UX
           setTimeout(() => {
