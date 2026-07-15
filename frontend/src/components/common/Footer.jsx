@@ -34,7 +34,7 @@ export default function Footer() {
           <ul className="mt-3 space-y-2">
             <li className="flex items-center gap-2"><Mail className="h-5 w-5 text-orange-500" /> support@pgmadeeazy.com</li>
             <li className="flex items-center gap-2"> Hyderabad, India</li>
-            <li className="flex items-center gap-2"> +91 8247593561</li>
+            <li className="flex items-center gap-2"> +91 9963983504</li>
           </ul>
         </div>
 

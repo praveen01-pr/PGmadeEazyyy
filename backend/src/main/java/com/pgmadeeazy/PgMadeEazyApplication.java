@@ -12,8 +12,11 @@ import com.pgmadeeazy.model.ApprovalStatus;
 import com.pgmadeeazy.repository.PropertyRepository;
 import com.pgmadeeazy.properties.CloudinaryProperties;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 @SpringBootApplication
 @EnableConfigurationProperties(CloudinaryProperties.class)
@@ -26,67 +29,11 @@ public class PgMadeEazyApplication {
     @Bean
     CommandLineRunner initDatabase(PropertyRepository propertyRepository) {
         return args -> {
-            // Seed a full dataset of realistic coliving hostels (all priced above ₹5,000)
-            System.out.println("Refreshing and seeding database with a comprehensive list of premium hostels...");
+            System.out.println("Refreshing and seeding database with 25+ Hyderabad hostels...");
             propertyRepository.deleteAll();
 
-            // 1. Hyderabad Budget PG (Boys) - ₹6,800
-            Property p1 = new Property();
-            p1.setName("OYO Life - Gachibowli Boys PG");
-            p1.setDescription("Budget-friendly boys PG located near DLF Cybercity. Cozy twin sharing rooms, high-speed Wi-Fi, laundry facilities, CCTV protection, and fresh nutritious meals included.");
-            p1.setCity("Hyderabad");
-            p1.setArea("Gachibowli");
-            p1.setRent(6800.0);
-            p1.setDeposit(10000.0);
-            p1.setRooms(12);
-            p1.setRoomTypes(Arrays.asList("Double sharing", "Triple sharing"));
-            p1.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Security", "Laundry"));
-            p1.setRules(Arrays.asList("No smoking inside", "Visitor curfew at 10 PM"));
-            p1.setOwnerId("owner1");
-            p1.setOwnerName("Praveen Prakash");
-            p1.setOwnerPhone("+91 94412 12345");
-            p1.setOwnerEmail("praveen.hyd@pgmadeeazy.com");
-            p1.setCategory("Boys");
-            p1.setImages(Arrays.asList(
-                "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80",
-                "https://images.unsplash.com/photo-1626125345510-4603468eedfb?auto=format&fit=crop&w=600&q=80"
-            ));
-            p1.setApprovalStatus(ApprovalStatus.APPROVED);
-            p1.setCreatedAt(new Date());
-            p1.setUpdatedAt(new Date());
-            p1.setApprovedAt(new Date());
-            p1.setApprovedBy("admin");
-            propertyRepository.save(p1);
-
-            // 2. Hyderabad Premium Coliving (Unisex) - ₹14,500
-            Property p2 = new Property();
-            p2.setName("Isthara Premium Coliving");
-            p2.setDescription("Luxury unisex coliving hub in Gachibowli. Features private workstations, fully functional fitness center, indoor games, community pool, laundry, and daily buffet dining.");
-            p2.setCity("Hyderabad");
-            p2.setArea("Gachibowli");
-            p2.setRent(14500.0);
-            p2.setDeposit(25000.0);
-            p2.setRooms(10);
-            p2.setRoomTypes(Arrays.asList("Single Room", "Double sharing"));
-            p2.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Gym", "Security", "Laundry", "Swimming Pool"));
-            p2.setRules(Arrays.asList("No drinking inside rooms", "Guests restricted after 10 PM"));
-            p2.setOwnerId("owner2");
-            p2.setOwnerName("Kalyan Reddy");
-            p2.setOwnerPhone("+91 90000 54321");
-            p2.setOwnerEmail("kalyan@pgmadeeazy.com");
-            p2.setCategory("Unisex");
-            p2.setImages(Arrays.asList(
-                "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=600&q=80",
-                "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80"
-            ));
-            p2.setApprovalStatus(ApprovalStatus.APPROVED);
-            p2.setCreatedAt(new Date());
-            p2.setUpdatedAt(new Date());
-            p2.setApprovedAt(new Date());
-            p2.setApprovedBy("admin");
-            propertyRepository.save(p2);
-
-            // 3. Bangalore Budget PG (Boys) - ₹7,500
+            // Seed other major cities properties
+            // 1. Bangalore Budget PG (Boys) - ₹7,500
             Property p3 = new Property();
             p3.setName("Stanza Living - Dublin House");
             p3.setDescription("Super neat coliving student PG in Koramangala. Includes 3 meals daily, high-speed Wi-Fi, laundry, biometric entrance control, and recreation area.");
@@ -114,7 +61,7 @@ public class PgMadeEazyApplication {
             p3.setApprovedBy("admin");
             propertyRepository.save(p3);
 
-            // 4. Bangalore Premium PG (Girls) - ₹12,000
+            // 2. Bangalore Premium PG (Girls) - ₹12,000
             Property p4 = new Property();
             p4.setName("Zolo Coliving - Indiranagar Suites");
             p4.setDescription("Premium girls coliving suites. Features individual wardrobe spaces, study table setup, AC, common lounge, fully automatic laundry, and 3-tier security guard deployment.");
@@ -142,7 +89,7 @@ public class PgMadeEazyApplication {
             p4.setApprovedBy("admin");
             propertyRepository.save(p4);
 
-            // 5. Chennai Mid-range PG (Girls) - ₹7,200
+            // 3. Chennai Mid-range PG (Girls) - ₹7,200
             Property p5 = new Property();
             p5.setName("Adyar Cozy Nest for Girls");
             p5.setDescription("Highly secure and comfortable girls PG in Adyar. Features clean air-conditioned rooms, healthy meals, study desks, laundry, and fingerprint access gate control.");
@@ -170,7 +117,7 @@ public class PgMadeEazyApplication {
             p5.setApprovedBy("admin");
             propertyRepository.save(p5);
 
-            // 6. Delhi Student PG (Girls) - ₹9,500
+            // 4. Delhi Student PG (Girls) - ₹9,500
             Property p6 = new Property();
             p6.setName("North Campus Elite Girls PG");
             p6.setDescription("Charming, clean girls hostel in North Campus near DU. Features study table, wardrobes, high speed Wi-Fi, central AC, laundry service, and healthy meals thrice a day.");
@@ -198,91 +145,59 @@ public class PgMadeEazyApplication {
             p6.setApprovedBy("admin");
             propertyRepository.save(p6);
 
-            // 7. Mumbai IT Coliving (Unisex) - ₹18,000
-            Property p7 = new Property();
-            p7.setName("Bandra Premium Coliving Suites");
-            p7.setDescription("Sleek, fully automated co-living apartment space in Bandra West. Ideal for young professionals, offering private desks, smart laundry, high-speed Wi-Fi, Gym, and daily housekeeping.");
-            p7.setCity("Mumbai");
-            p7.setArea("Bandra West");
-            p7.setRent(18000.0);
-            p7.setDeposit(40000.0);
-            p7.setRooms(8);
-            p7.setRoomTypes(Arrays.asList("Single Room", "Double sharing"));
-            p7.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Gym", "Security", "Laundry"));
-            p7.setRules(Arrays.asList("Respect quiet hours after 10 PM", "Prior approval for guest overnight stays"));
-            p7.setOwnerId("owner5");
-            p7.setOwnerName("Amit Fernandes");
-            p7.setOwnerPhone("+91 98200 12345");
-            p7.setOwnerEmail("amit.mum@pgmadeeazy.com");
-            p7.setCategory("Unisex");
-            p7.setImages(Arrays.asList(
-                "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=600&q=80",
-                "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80"
-            ));
-            p7.setApprovalStatus(ApprovalStatus.APPROVED);
-            p7.setCreatedAt(new Date());
-            p7.setUpdatedAt(new Date());
-            p7.setApprovedAt(new Date());
-            p7.setApprovedBy("admin");
-            propertyRepository.save(p7);
+            // Programmatically generate 25 properties in Hyderabad
+            List<String> hyderabadAreas = Arrays.asList("Gachibowli", "Madhapur", "Kondapur", "Jubilee Hills", "Banjara Hills", "Ameerpet", "Kukatpally");
+            List<String> pgBrands = Arrays.asList("OYO Life", "Stanza Living", "Zolo Stay", "Coho Coliving", "Isthara House", "Boston Coliving", "Boston Premium");
+            List<String> pgNames = Arrays.asList("Elite House", "Comfort Nest", "Premium Suites", "Luxury Haven", "Executive Stay", "Standard Lodge", "Orchid Retreat", "Castle Stay", "Grand Coliving");
+            List<String> categories = Arrays.asList("Boys", "Girls", "Unisex");
+            
+            List<List<String>> unsplashImages = Arrays.asList(
+                Arrays.asList("https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1626125345510-4603468eedfb?auto=format&fit=crop&w=600&q=80"),
+                Arrays.asList("https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80"),
+                Arrays.asList("https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=600&q=80"),
+                Arrays.asList("https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80", "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80")
+            );
 
-            // 8. Pune Budget PG (Boys) - ₹5,800
-            Property p8 = new Property();
-            p8.setName("Hinjewadi Tech Boys PG");
-            p8.setDescription("Budget-friendly hostel PG for male IT professionals in Hinjewadi. Features high speed Wi-Fi, hot water facility, clean drinking water, daily cleaning, and simple vegetarian dining.");
-            p8.setCity("Pune");
-            p8.setArea("Hinjewadi");
-            p8.setRent(5800.0);
-            p8.setDeposit(10000.0);
-            p8.setRooms(20);
-            p8.setRoomTypes(Arrays.asList("Double sharing", "Triple sharing"));
-            p8.setAmenities(Arrays.asList("Wi-Fi", "Food", "Security", "Laundry", "Parking"));
-            p8.setRules(Arrays.asList("No smoking inside", "Quiet hours after 11 PM"));
-            p8.setOwnerId("owner6");
-            p8.setOwnerName("Sanjay Patil");
-            p8.setOwnerPhone("+91 97660 12345");
-            p8.setOwnerEmail("sanjay.pune@pgmadeeazy.com");
-            p8.setCategory("Boys");
-            p8.setImages(Arrays.asList(
-                "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=600&q=80",
-                "https://images.unsplash.com/photo-1626125345510-4603468eedfb?auto=format&fit=crop&w=600&q=80"
-            ));
-            p8.setApprovalStatus(ApprovalStatus.APPROVED);
-            p8.setCreatedAt(new Date());
-            p8.setUpdatedAt(new Date());
-            p8.setApprovedAt(new Date());
-            p8.setApprovedBy("admin");
-            propertyRepository.save(p8);
+            Random rand = new Random();
 
-            // 9. Pune Mid-range PG (Girls) - ₹8,200
-            Property p9 = new Property();
-            p9.setName("Viman Nagar Cozy Girls PG");
-            p9.setDescription("Comfortable girls PG located near Symbiosis. Features fully furnished single and double sharing rooms, CCTV security, laundry services, and home-like buffet meals.");
-            p9.setCity("Pune");
-            p9.setArea("Viman Nagar");
-            p9.setRent(8200.0);
-            p9.setDeposit(15000.0);
-            p9.setRooms(15);
-            p9.setRoomTypes(Arrays.asList("Single Room", "Double sharing"));
-            p9.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Security", "Laundry"));
-            p9.setRules(Arrays.asList("Curfew at 10:30 PM", "Maintain hygiene in common spaces"));
-            p9.setOwnerId("owner7");
-            p9.setOwnerName("Manisha Joshi");
-            p9.setOwnerPhone("+91 98220 54321");
-            p9.setOwnerEmail("manisha.pune@pgmadeeazy.com");
-            p9.setCategory("Girls");
-            p9.setImages(Arrays.asList(
-                "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=600&q=80",
-                "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=600&q=80"
-            ));
-            p9.setApprovalStatus(ApprovalStatus.APPROVED);
-            p9.setCreatedAt(new Date());
-            p9.setUpdatedAt(new Date());
-            p9.setApprovedAt(new Date());
-            p9.setApprovedBy("admin");
-            propertyRepository.save(p9);
+            for (int i = 1; i <= 25; i++) {
+                Property p = new Property();
+                String area = hyderabadAreas.get(rand.nextInt(hyderabadAreas.size()));
+                String brand = pgBrands.get(rand.nextInt(pgBrands.size()));
+                String nameSuffix = pgNames.get(rand.nextInt(pgNames.size()));
+                String category = categories.get(rand.nextInt(categories.size()));
+                
+                p.setName(brand + " - " + nameSuffix + " " + (100 + i));
+                p.setDescription("Fully managed, modern " + category.toLowerCase() + " PG hostel located in the prime hub of " + area + ", Hyderabad. Rent includes high-speed Wi-Fi, laundry service, CCTV security, daily cleaning, and healthy meals.");
+                p.setCity("Hyderabad");
+                p.setArea(area);
+                
+                // Rent between 5200 and 17500
+                double rent = 5200 + rand.nextInt(124) * 100;
+                p.setRent(rent);
+                p.setDeposit(rent * 2);
+                
+                p.setRooms(5 + rand.nextInt(15));
+                p.setRoomTypes(Arrays.asList("Single Room", "Double sharing", "Triple sharing"));
+                p.setAmenities(Arrays.asList("Wi-Fi", "Food", "AC", "Security", "Laundry", "Power Backup"));
+                p.setRules(Arrays.asList("Gate closes at 10:30 PM", "No alcohol/smoking inside rooms"));
+                p.setOwnerId("owner_hyd_" + i);
+                p.setOwnerName("Hyderabad Host " + i);
+                p.setOwnerPhone("+91 90000 " + (10000 + rand.nextInt(90000)));
+                p.setOwnerEmail("owner.hyd" + i + "@pgmadeeazy.com");
+                p.setCategory(category);
+                p.setImages(unsplashImages.get(rand.nextInt(unsplashImages.size())));
+                
+                p.setApprovalStatus(ApprovalStatus.APPROVED);
+                p.setCreatedAt(new Date());
+                p.setUpdatedAt(new Date());
+                p.setApprovedAt(new Date());
+                p.setApprovedBy("admin");
+                
+                propertyRepository.save(p);
+            }
 
-            System.out.println("Seeding completed successfully!");
+            System.out.println("25+ Hyderabad hostels successfully seeded!");
         };
     }
 }
