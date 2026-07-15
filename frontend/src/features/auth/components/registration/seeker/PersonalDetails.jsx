@@ -78,59 +78,20 @@ const PersonalDetails = ({ formData, handleChange, errors }) => {
           {errors.phone && <span className="text-red-500 text-sm">{errors.phone}</span>}
         </div>
 
-        <div className="space-y-1">
-          <label className="text-gray-200">Date of Birth</label>
-          <input
-            type="date"
-            name="dateOfBirth"
-            value={formData.dateOfBirth}
-            onChange={handleChange}
-            max={maxDate}
-            className="w-full p-2 rounded bg-black/50 border border-gray-700 text-white"
-          />
-          {errors.dateOfBirth && <span className="text-red-500 text-sm">{errors.dateOfBirth}</span>}
-        </div>
-
-        <div className="space-y-1">
-          <label className="text-gray-200">Gender</label>
-          <select
-            name="gender"
-            value={formData.gender}
-            onChange={handleChange}
-            className="w-full p-2 rounded bg-black/50 border border-gray-700 text-white"
-          >
-            <option value="">Select Gender</option>
-            <option value="male">Male</option>
-            <option value="female">Female</option>
-            <option value="other">Other</option>
-          </select>
-          {errors.gender && <span className="text-red-500 text-sm">{errors.gender}</span>}
-        </div>
-
-        <div className="space-y-1">
-          <label className="text-gray-200">Current City</label>
-          <input
-            type="text"
-            name="currentCity"
-            value={formData.currentCity}
-            onChange={handleChange}
-            className="w-full p-2 rounded bg-black/50 border border-gray-700 text-white"
-            placeholder="Enter your current city"
-          />
-          {errors.currentCity && <span className="text-red-500 text-sm">{errors.currentCity}</span>}
-        </div>
-
-        <div className="space-y-1">
-          <label className="text-gray-200">Preferred Location</label>
-          <input
-            type="text"
-            name="preferredLocation"
-            value={formData.preferredLocation}
-            onChange={handleChange}
-            className="w-full p-2 rounded bg-black/50 border border-gray-700 text-white"
-            placeholder="Enter preferred location"
-          />
-          {errors.preferredLocation && <span className="text-red-500 text-sm">{errors.preferredLocation}</span>}
+        <div className="col-span-1 md:col-span-2 mt-4">
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              name="termsAgreed"
+              checked={formData.termsAgreed}
+              onChange={handleChange}
+              className="w-4 h-4 text-orange-500 bg-black/50 border-gray-700 rounded focus:ring-orange-500"
+            />
+            <label className="text-gray-200 text-sm">
+              I agree to the <a href="/terms" className="text-orange-500 hover:text-orange-600">Terms and Conditions</a> and <a href="/privacy" className="text-orange-500 hover:text-orange-600">Privacy Policy</a>
+            </label>
+          </div>
+          {errors.termsAgreed && <p className="text-red-500 text-sm mt-1">{errors.termsAgreed}</p>}
         </div>
       </div>
     </div>

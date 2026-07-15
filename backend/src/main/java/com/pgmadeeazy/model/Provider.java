@@ -29,29 +29,20 @@ public class Provider {
     @Pattern(regexp = "^\\d{10}$", message = "Phone number must be 10 digits")
     private String phone;
 
-    @NotBlank(message = "Date of birth is required")
     private String dateOfBirth;
 
-    @NotBlank(message = "Gender is required")
     private String gender;
 
-    @NotBlank(message = "Current city is required")
     private String currentCity;
 
-    @NotBlank(message = "Government ID type is required")
     private String govtIdType;
 
-    @NotBlank(message = "Government ID number is required")
     private String govtIdNumber;
 
-    @NotBlank(message = "Emergency contact name is required")
     private String emergencyContactName;
 
-    @NotBlank(message = "Emergency contact number is required")
-    @Pattern(regexp = "^\\d{10}$", message = "Emergency contact number must be 10 digits")
     private String emergencyContactNumber;
 
-    @NotNull(message = "Terms agreement is required")
     private Boolean termsAgreed;
 
     @NotBlank(message = "Role is required")

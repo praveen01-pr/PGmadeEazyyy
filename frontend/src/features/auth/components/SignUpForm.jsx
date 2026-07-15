@@ -58,7 +58,7 @@ const MultiStepRegistration = () => {
   const [message, setMessage] = useState("");
 
   // Calculate total steps based on user type
-  const totalSteps = userType ? 4 : 1;
+  const totalSteps = userType ? 2 : 1;
 
   // Calculate progress percentage
   const calculateProgress = () => {
@@ -127,36 +127,9 @@ const MultiStepRegistration = () => {
       } else if (!/^\d{10}$/.test(formData.phone)) {
         newErrors.phone = "Phone number must be 10 digits";
       }
-      if (!formData.dateOfBirth) newErrors.dateOfBirth = "Date of birth is required";
-      if (!formData.gender) newErrors.gender = "Gender is required";
-      if (!formData.currentCity.trim()) newErrors.currentCity = "Current city is required";
-    }
-
-    if (step === 3) {
-      if (userType === "seeker") {
-        if (!formData.occupationType) newErrors.occupationType = "Please select your occupation";
-        
-        if (formData.occupationType === "student") {
-          if (!formData.collegeName.trim()) newErrors.collegeName = "College name is required";
-          if (!formData.courseName.trim()) newErrors.courseName = "Course name is required";
-          if (!formData.yearOfStudy) newErrors.yearOfStudy = "Year of study is required";
-          if (!formData.collegeAddress.trim()) newErrors.collegeAddress = "College address is required";
-        } else if (formData.occupationType === "professional") {
-          if (!formData.companyName.trim()) newErrors.companyName = "Company name is required";
-          if (!formData.jobRole.trim()) newErrors.jobRole = "Job role is required";
-          if (!formData.workExperience) newErrors.workExperience = "Work experience is required";
-          if (!formData.officeAddress.trim()) newErrors.officeAddress = "Office address is required";
-        }
+      if (!formData.termsAgreed) {
+        newErrors.termsAgreed = "You must agree to the terms and conditions";
       }
-    }
-
-    if (step === 4) {
-      // Verification step validation
-      if (!formData.govtIdType) newErrors.govtIdType = "Government ID type is required";
-      if (!formData.govtIdNumber) newErrors.govtIdNumber = "Government ID number is required";
-      if (!formData.emergencyContactName) newErrors.emergencyContactName = "Emergency contact name is required";
-      if (!formData.emergencyContactNumber) newErrors.emergencyContactNumber = "Emergency contact number is required";
-      if (!formData.termsAgreed) newErrors.termsAgreed = "You must agree to the terms and conditions";
     }
 
     setErrors(newErrors);
