@@ -172,9 +172,10 @@ const MultiStepRegistration = () => {
       }
 
       // Send to Spring Boot backend
+      const apiBaseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
       const endpoint = userType === "seeker" ? 
-        `${import.meta.env.VITE_API_BASE_URL}/api/auth/register/seeker` :
-        `${import.meta.env.VITE_API_BASE_URL}/api/auth/register/provider`;
+        `${apiBaseUrl}/api/auth/register/seeker` :
+        `${apiBaseUrl}/api/auth/register/provider`;
 
       try {
         const response = await axios.post(endpoint, submissionData, {
