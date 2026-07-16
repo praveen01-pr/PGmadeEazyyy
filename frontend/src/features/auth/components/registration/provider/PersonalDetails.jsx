@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const PersonalDetails = ({ formData, handleChange, errors }) => {
   const [maxDate] = useState(() => {
@@ -88,7 +89,7 @@ const PersonalDetails = ({ formData, handleChange, errors }) => {
               className="w-4 h-4 text-orange-500 bg-black/50 border-gray-700 rounded focus:ring-orange-500"
             />
             <label className="text-gray-200 text-sm">
-              I agree to the <a href="/terms" className="text-orange-500 hover:text-orange-600">Terms and Conditions</a> and <a href="/privacy" className="text-orange-500 hover:text-orange-600">Privacy Policy</a>
+              I agree to the <Link to="/terms" className="text-orange-500 hover:text-orange-600">Terms and Conditions</Link> and <Link to="/privacy" className="text-orange-500 hover:text-orange-600">Privacy Policy</Link>
             </label>
           </div>
           {errors.termsAgreed && <p className="text-red-500 text-sm mt-1">{errors.termsAgreed}</p>}

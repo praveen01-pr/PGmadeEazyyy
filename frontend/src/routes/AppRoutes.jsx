@@ -25,6 +25,8 @@ import PayPalSuccess from '../features/seeker/components/PayPalSuccess';
 import PayPalCancel from '../features/seeker/components/PayPalCancel';
 import HowItWorks from '../pages/HowItWorks';
 import Contact from '../pages/Contact';
+import Terms from '../pages/Terms';
+import Privacy from '../pages/Privacy';
 import SavedPGs from '../features/seeker/components/SavedPGs';
 import Messages from '../features/seeker/components/Messages';
 
@@ -36,6 +38,8 @@ const AppRoutes = () => {
       <Route path="/login" element={<SignInForm />} />
       <Route path="/how-it-works" element={<HowItWorks />} />
       <Route path="/contact" element={<Contact />} />
+      <Route path="/terms" element={<Terms />} />
+      <Route path="/privacy" element={<Privacy />} />
       
       {/* Seeker Routes */}
       <Route path="/seeker-dashboard" element={
