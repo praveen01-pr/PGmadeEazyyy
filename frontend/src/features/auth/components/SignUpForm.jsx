@@ -189,7 +189,7 @@ const MultiStepRegistration = () => {
           // Add a small delay before navigation for better UX
           setTimeout(() => {
             navigate("/login");
-          }, 1500);
+          }, 400);
         } else {
           setMessage("Registration failed. Please try again.");
         }

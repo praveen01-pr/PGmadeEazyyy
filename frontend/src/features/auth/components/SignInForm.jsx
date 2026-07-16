@@ -106,7 +106,7 @@ const SignInForm = () => {
             default:
               throw new Error('Invalid user type');
           }
-        }, 1500);
+        }, 400);
       } else {
         setMessage("Invalid credentials. Please try again.");
       }
