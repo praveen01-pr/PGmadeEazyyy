@@ -28,7 +28,8 @@ export const AuthProvider = ({ children }) => {
       setError(null);
       setLoading(true);
       
-      const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
+      const apiBaseUrl = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+      const response = await axios.post(`${apiBaseUrl}/api/auth/login`, {
         email,
         password
       }, {
