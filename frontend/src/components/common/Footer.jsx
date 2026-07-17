@@ -61,7 +61,7 @@ export default function Footer() {
         
         {/* Social Icons */}
         <div className="flex space-x-4">
-          <a href="https://www.linkedin.com/in/praveenprakash" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
+          <a href="https://www.linkedin.com/in/praveenprakash04" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
             <Linkedin className="h-6 w-6" />
           </a>
           <a href="#" className="hover:text-orange-500 transition">
