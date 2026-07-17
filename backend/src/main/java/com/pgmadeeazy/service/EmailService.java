@@ -27,29 +27,31 @@ public class EmailService {
     private String fromEmail;
 
     public void sendRegistrationEmail(String to, String name, String userType) {
-        try {
-            logger.info("Attempting to send email to: {}", to);
-            
-            Context context = new Context();
-            context.setVariable("name", name);
-            context.setVariable("userType", userType);
-            context.setVariable("loginUrl", "http://localhost:5173/login");
+        new Thread(() -> {
+            try {
+                logger.info("Attempting to send email to: {}", to);
+                
+                Context context = new Context();
+                context.setVariable("name", name);
+                context.setVariable("userType", userType);
+                context.setVariable("loginUrl", "http://localhost:5173/login");
 
-            String emailContent = templateEngine.process("registration-email", context);
-            logger.debug("Generated email content: {}", emailContent);
+                String emailContent = templateEngine.process("registration-email", context);
+                logger.debug("Generated email content: {}", emailContent);
 
-            MimeMessage message = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+                MimeMessage message = mailSender.createMimeMessage();
+                MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
-            helper.setFrom(fromEmail);
-            helper.setTo(to);
-            helper.setSubject("Welcome to PG Made Easy!");
-            helper.setText(emailContent, true);
+                helper.setFrom(fromEmail);
+                helper.setTo(to);
+                helper.setSubject("Welcome to PG Made Easy!");
+                helper.setText(emailContent, true);
 
-            mailSender.send(message);
-            logger.info("Email sent successfully to: {}", to);
-        } catch (Exception e) {
-            logger.error("Failed to send email to: {}. Registration will proceed.", to, e);
-        }
+                mailSender.send(message);
+                logger.info("Email sent successfully to: {}", to);
+            } catch (Exception e) {
+                logger.error("Failed to send email to: {}. Registration will proceed.", to, e);
+            }
+        }).start();
     }
 } 
