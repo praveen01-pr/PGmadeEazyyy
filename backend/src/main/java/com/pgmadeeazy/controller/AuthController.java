@@ -119,4 +119,26 @@ public class AuthController {
     public ResponseEntity<String> testCors() {
         return ResponseEntity.ok("CORS is working!");
     }
+
+    @GetMapping("/list-users-debug")
+    public ResponseEntity<?> listUsersDebug() {
+        try {
+            return ResponseEntity.ok(java.util.Map.of(
+                "seekers", seekerRepository.findAll().stream().map(s -> java.util.Map.of(
+                    "id", s.getId(),
+                    "name", s.getFullName(),
+                    "email", s.getEmail(),
+                    "passwordHash", s.getPassword()
+                )).toList(),
+                "providers", providerRepository.findAll().stream().map(p -> java.util.Map.of(
+                    "id", p.getId(),
+                    "name", p.getFullName(),
+                    "email", p.getEmail(),
+                    "passwordHash", p.getPassword()
+                )).toList()
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 }
