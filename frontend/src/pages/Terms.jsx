@@ -1,10 +1,22 @@
 import React from 'react';
-import { ShieldCheck, Scale, AlertTriangle, HelpCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ShieldCheck, Scale, AlertTriangle, HelpCircle, ArrowLeft } from 'lucide-react';
 
 const Terms = () => {
   return (
     <div className="min-h-screen bg-black text-white py-16">
       <div className="container mx-auto px-4 max-w-4xl">
+        {/* Back Link */}
+        <div className="mb-8">
+          <Link 
+            to="/register" 
+            className="inline-flex items-center gap-2 text-orange-500 hover:text-orange-400 font-semibold transition"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            Back to Registration
+          </Link>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-12">
           <div className="flex justify-center mb-4">
