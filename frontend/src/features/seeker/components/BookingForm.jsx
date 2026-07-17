@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Calendar, Users, CreditCard, Mail, Home, AlertCircle } from 'lucide-react';
+import { X, Calendar, Users, CreditCard, Mail, Home, AlertCircle, DollarSign } from 'lucide-react';
 import { bookingApi } from '../../../services/api';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +17,7 @@ const BookingForm = ({ property, onClose }) => {
   const [error, setError] = useState(null);
   const [calculatedAmount, setCalculatedAmount] = useState({ inr: 0, usd: 0, days: 0 });
   const [availableRooms, setAvailableRooms] = useState(property.rooms);
+  const [isIndefinite, setIsIndefinite] = useState(false); // Indefinite monthly stay toggle
   const navigate = useNavigate();
   const { user } = useAuth();
 
@@ -55,7 +56,6 @@ const BookingForm = ({ property, onClose }) => {
     }
   }, [user, navigate]);
 
-  // Remove the direct navigation check
   if (!user) {
     return null;
   }
@@ -65,6 +65,20 @@ const BookingForm = ({ property, onClose }) => {
     if (!dateString) return null;
     const [day, month, year] = dateString.split('/').map(Number);
     return new Date(year, month - 1, day);
+  };
+
+  // Auto-calculate check-out date exactly 30 days after check-in for monthly stays
+  const calculateCheckOutDate = (checkInStr) => {
+    if (!validateDateFormat(checkInStr)) return '';
+    const checkInDate = parseDate(checkInStr);
+    if (!checkInDate) return '';
+    const checkOutDate = new Date(checkInDate);
+    checkOutDate.setDate(checkOutDate.getDate() + 30); // 30 days later
+    
+    const d = String(checkOutDate.getDate()).padStart(2, '0');
+    const m = String(checkOutDate.getMonth() + 1).padStart(2, '0');
+    const y = checkOutDate.getFullYear();
+    return `${d}/${m}/${y}`;
   };
 
   // Calculate amounts with DD/MM/YYYY format
@@ -95,7 +109,6 @@ const BookingForm = ({ property, onClose }) => {
         return { inr: 0, usd: 0, days: 0 };
       }
 
-      // Validate year is reasonable (between 2024 and 2100)
       const year = checkInDate.getFullYear();
       if (year < 2024 || year > 2100) {
         console.log('Invalid year in dates');
@@ -127,9 +140,8 @@ const BookingForm = ({ property, onClose }) => {
   };
 
   const validateDateFormat = (dateString) => {
-    if (!dateString) return true; // Empty is valid, will be caught by required field
+    if (!dateString) return true;
     
-    // Check format DD/MM/YYYY
     const regex = /^(\d{2})\/(\d{2})\/(\d{4})$/;
     if (!regex.test(dateString)) return false;
 
@@ -138,12 +150,10 @@ const BookingForm = ({ property, onClose }) => {
     const numMonth = parseInt(month, 10);
     const numYear = parseInt(year, 10);
 
-    // Basic validation
     if (numMonth < 1 || numMonth > 12) return false;
     if (numDay < 1 || numDay > 31) return false;
     if (numYear < 2024 || numYear > 2100) return false;
 
-    // Check valid day for month
     const daysInMonth = new Date(numYear, numMonth, 0).getDate();
     if (numDay > daysInMonth) return false;
 
@@ -153,7 +163,7 @@ const BookingForm = ({ property, onClose }) => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     
-    // For date fields, validate format
+    // For date fields, validate format and handle calculations
     if ((name === 'checkInDate' || name === 'checkOutDate')) {
       if (!value || value.length < formData[name].length) {
         const newFormData = {
@@ -173,22 +183,26 @@ const BookingForm = ({ property, onClose }) => {
           formatted = `${cleaned.slice(0, 2)}/${cleaned.slice(2)}`;
         }
         
+        // If indefinite stay is active, auto-calculate check-out date as 30 days after check-in
+        let checkOutVal = formData.checkOutDate;
+        if (name === 'checkInDate' && isIndefinite) {
+          checkOutVal = calculateCheckOutDate(formatted);
+        } else if (name === 'checkOutDate') {
+          checkOutVal = formatted;
+        }
+
         const newFormData = {
           ...formData,
-          [name]: formatted
+          checkInDate: name === 'checkInDate' ? formatted : formData.checkInDate,
+          checkOutDate: checkOutVal
         };
         setFormData(newFormData);
 
         // Check availability when both dates are valid
-        if (validateDateFormat(formatted)) {
-          const checkInDate = name === 'checkInDate' ? formatted : formData.checkInDate;
-          const checkOutDate = name === 'checkOutDate' ? formatted : formData.checkOutDate;
-          
-          if (validateDateFormat(checkInDate) && validateDateFormat(checkOutDate)) {
-            fetchAvailableRooms(checkInDate, checkOutDate);
-            const amounts = calculateAmounts(checkInDate, checkOutDate, formData.roomsToBook);
-            setCalculatedAmount(amounts);
-          }
+        if (validateDateFormat(newFormData.checkInDate) && validateDateFormat(newFormData.checkOutDate)) {
+          fetchAvailableRooms(newFormData.checkInDate, newFormData.checkOutDate);
+          const amounts = calculateAmounts(newFormData.checkInDate, newFormData.checkOutDate, formData.roomsToBook);
+          setCalculatedAmount(amounts);
         }
       }
       return;
@@ -212,7 +226,6 @@ const BookingForm = ({ property, onClose }) => {
     }
   };
 
-  // Function to format date for API
   const formatDateForAPI = (dateString) => {
     if (!dateString) return '';
     const [day, month, year] = dateString.split('/');
@@ -226,7 +239,6 @@ const BookingForm = ({ property, onClose }) => {
     };
     setFormData(newFormData);
     
-    // Recalculate amounts with current dates
     const amounts = calculateAmounts(
       newFormData.checkInDate,
       newFormData.checkOutDate,
@@ -245,7 +257,6 @@ const BookingForm = ({ property, onClose }) => {
         throw new Error("Invalid dates selected");
       }
 
-      // Create booking data with formatted dates and seeker's email
       const bookingData = {
         propertyId: property.id,
         seekerId: user.id,
@@ -262,7 +273,6 @@ const BookingForm = ({ property, onClose }) => {
 
       console.log('Sending booking data:', bookingData);
 
-      // Create booking
       const response = await bookingApi.createBooking(bookingData);
       console.log('Booking response:', response);
       
@@ -274,7 +284,6 @@ const BookingForm = ({ property, onClose }) => {
       console.log('Created booking:', booking);
 
       if (formData.paymentMethod === 'PAYPAL') {
-        // Store booking data for PayPal success page
         const pendingBookingData = {
           ...booking,
           propertyName: property.name,
@@ -282,7 +291,6 @@ const BookingForm = ({ property, onClose }) => {
         };
         localStorage.setItem('pendingBooking', JSON.stringify(pendingBookingData));
         
-        // Create PayPal payment (in USD)
         const paymentResponse = await bookingApi.createPayPalPayment({
           bookingId: booking.id,
           amount: calculatedAmount.usd,
@@ -296,21 +304,16 @@ const BookingForm = ({ property, onClose }) => {
           throw new Error('Invalid PayPal payment response');
         }
 
-        // Use window.location.href instead of navigate for PayPal redirect
         window.location.href = paymentResponse.data.approvalUrl;
       } else {
-        // For cash payments, update booking status to PAID
-        await bookingApi.updateBookingStatus(booking.id, 'PAID');
-        
-        // Show success message and use setTimeout for navigation
-        toast.success('Booking created successfully! Please complete the payment to confirm your booking.');
+        // For cash / direct payments, redirect immediately to bookings dashboard
+        toast.success('Booking requested! Please pay the owner directly upon check-in.');
         setTimeout(() => {
-          navigate('/seeker/my-bookings');
-        }, 1000);
+          navigate('/seeker-dashboard/bookings');
+        }, 1200);
       }
     } catch (error) {
       console.error('Booking error:', error);
-      console.error('Error response:', error.response);
       setError(error.response?.data?.message || error.message || 'Failed to create booking');
       toast.error(error.response?.data?.message || error.message || 'Failed to create booking');
     } finally {
@@ -320,7 +323,8 @@ const BookingForm = ({ property, onClose }) => {
 
   return (
     <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
-      <div className="bg-black/80 rounded-xl p-6 max-w-md w-full mx-4 border border-orange-600">
+      {/* Scrollable Container Wrapper with max-height to fit all screen sizes */}
+      <div className="bg-black/80 rounded-xl p-6 max-w-md w-full mx-4 border border-orange-600 max-h-[90vh] overflow-y-auto scrollbar-thin">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold text-white">Book {property.name}</h2>
           <button
@@ -402,6 +406,35 @@ const BookingForm = ({ property, onClose }) => {
                 Please enter a valid date in DD/MM/YYYY format
               </div>
             )}
+
+            {/* Indefinite Stay Toggle */}
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="isIndefinite"
+                checked={isIndefinite}
+                onChange={(e) => {
+                  const checked = e.target.checked;
+                  setIsIndefinite(checked);
+                  if (checked && formData.checkInDate) {
+                    const checkOutVal = calculateCheckOutDate(formData.checkInDate);
+                    setFormData(prev => ({
+                      ...prev,
+                      checkOutDate: checkOutVal
+                    }));
+                    if (validateDateFormat(formData.checkInDate) && validateDateFormat(checkOutVal)) {
+                      fetchAvailableRooms(formData.checkInDate, checkOutVal);
+                      const amounts = calculateAmounts(formData.checkInDate, checkOutVal, formData.roomsToBook);
+                      setCalculatedAmount(amounts);
+                    }
+                  }
+                }}
+                className="w-4 h-4 accent-orange-500 border-zinc-800 rounded bg-zinc-900 focus:ring-0 cursor-pointer"
+              />
+              <label htmlFor="isIndefinite" className="text-xs text-zinc-300 cursor-pointer select-none">
+                I don't have a check-out date (Stay indefinitely / Pay monthly)
+              </label>
+            </div>
           </div>
 
           {/* Check-out Date */}
@@ -415,13 +448,19 @@ const BookingForm = ({ property, onClose }) => {
                 value={formData.checkOutDate}
                 onChange={handleInputChange}
                 placeholder="DD/MM/YYYY"
-                className="w-full pl-10 pr-4 py-2 bg-black/50 border border-orange-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className={`w-full pl-10 pr-4 py-2 bg-black/50 border border-orange-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-orange-500 ${isIndefinite ? 'bg-zinc-900/50 cursor-not-allowed opacity-70' : ''}`}
                 required
+                disabled={isIndefinite}
                 pattern="\d{2}/\d{2}/\d{4}"
                 maxLength="10"
               />
             </div>
-            {formData.checkOutDate && !validateDateFormat(formData.checkOutDate) && (
+            {isIndefinite && (
+              <p className="text-xxs text-orange-400 mt-1 leading-normal">
+                Monthly Stay enabled. First month's security deposit covers your initial 30 days. You will pay rent directly to the owner each month.
+              </p>
+            )}
+            {formData.checkOutDate && !validateDateFormat(formData.checkOutDate) && !isIndefinite && (
               <div className="text-red-500 text-sm mt-1">
                 Please enter a valid date in DD/MM/YYYY format
               </div>
@@ -446,7 +485,7 @@ const BookingForm = ({ property, onClose }) => {
             </div>
           </div>
 
-          {/* Email (read-only) */}
+          {/* Email */}
           <div>
             <label className="block text-white mb-2">Email</label>
             <div className="relative">
@@ -460,17 +499,33 @@ const BookingForm = ({ property, onClose }) => {
             </div>
           </div>
 
-          {/* Payment Method - Only PayPal */}
+          {/* Payment Method - PayPal and Cash / Pay to Owner */}
           <div>
             <label className="block text-white mb-2">Payment Method</label>
-            <div className="grid grid-cols-1 gap-4">
+            <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
                 onClick={() => handlePaymentMethodChange('PAYPAL')}
-                className={`flex items-center justify-center gap-2 p-3 rounded-lg border ${formData.paymentMethod === 'PAYPAL' ? 'bg-orange-600' : 'bg-black/50'} border-orange-600 text-white`}
+                className={`flex items-center justify-center gap-2 p-3 rounded-lg border text-sm font-semibold transition-all ${
+                  formData.paymentMethod === 'PAYPAL' 
+                    ? 'bg-orange-600 border-orange-600 text-white' 
+                    : 'bg-black/50 border-zinc-800 text-gray-400 hover:border-orange-500/50 hover:text-white'
+                }`}
               >
-                <CreditCard className="w-5 h-5" />
+                <CreditCard className="w-4 h-4" />
                 PayPal
+              </button>
+              <button
+                type="button"
+                onClick={() => handlePaymentMethodChange('CASH')}
+                className={`flex items-center justify-center gap-2 p-3 rounded-lg border text-sm font-semibold transition-all ${
+                  formData.paymentMethod === 'CASH' 
+                    ? 'bg-orange-600 border-orange-600 text-white' 
+                    : 'bg-black/50 border-zinc-800 text-gray-400 hover:border-orange-500/50 hover:text-white'
+                }`}
+              >
+                <DollarSign className="w-4 h-4" />
+                Pay Owner
               </button>
             </div>
           </div>
@@ -483,10 +538,12 @@ const BookingForm = ({ property, onClose }) => {
 
           {/* Price Display */}
           {property?.rent && (
-            <div className="text-white text-sm space-y-1">
-              <p>Price per room per night: ₹{property.rent.toLocaleString()}</p>
+            <div className="text-white text-xs space-y-1 pt-2 border-t border-zinc-800/80">
+              <p>Price per room per month: ₹{property.rent.toLocaleString()}</p>
               {calculatedAmount.inr > 0 && (
-                <p>Total for {formData.roomsToBook} room(s) for {calculatedAmount.days} night(s):</p>
+                <p className="font-semibold text-orange-400">
+                  Initial Booking Total: ₹{calculatedAmount.inr.toLocaleString()} {formData.paymentMethod === 'PAYPAL' ? `($${calculatedAmount.usd})` : ''} ({calculatedAmount.days} days)
+                </p>
               )}
             </div>
           )}
@@ -495,12 +552,12 @@ const BookingForm = ({ property, onClose }) => {
           <button
             type="submit"
             disabled={loading || calculatedAmount.inr <= 0 || formData.roomsToBook > availableRooms || availableRooms === 0}
-            className="w-full px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full px-6 py-3 bg-orange-600 text-white font-bold rounded-lg hover:bg-orange-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-orange-600/10 text-xs tracking-wider uppercase"
           >
             {loading ? 'Processing...' : 
              availableRooms === 0 ? 'No Rooms Available' :
              calculatedAmount.inr > 0 
-               ? `Confirm Booking (₹${calculatedAmount.inr.toLocaleString()} / $${calculatedAmount.usd})` 
+               ? `Confirm Booking` 
                : 'Select dates to see amount'}
           </button>
         </form>
