@@ -61,16 +61,16 @@ export default function Footer() {
         
         {/* Social Icons */}
         <div className="flex space-x-4">
-          <a href="https://www.linkedin.com/in/vamshi05" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
+          <a href="https://www.linkedin.com/in/praveenprakash" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
             <Linkedin className="h-6 w-6" />
           </a>
-          <a href="https://x.com/vamshi_0508" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
+          <a href="#" className="hover:text-orange-500 transition">
             <Twitter className="h-6 w-6" />
           </a>
-          <a href="https://www.instagram.com/mruh_meme_project_/" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
+          <a href="https://www.instagram.com/praveenprakash" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
             <Instagram className="h-6 w-6" />
           </a>
-          <a href="https://github.com/VamshiMudiraj05" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
+          <a href="https://github.com/praveen01-pr" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition">
             <Github className="h-6 w-6" />
           </a>
         </div>
