@@ -29,6 +29,21 @@ const FindPG = () => {
   const [compareList, setCompareList] = useState([]);
   const [showCompareModal, setShowCompareModal] = useState(false);
 
+  // Server Wake-up Notice State (Render free-tier helper)
+  const [showWakeUpNotice, setShowWakeUpNotice] = useState(false);
+
+  useEffect(() => {
+    let timer;
+    if (loading) {
+      timer = setTimeout(() => {
+        setShowWakeUpNotice(true);
+      }, 2500); // show notice if it takes longer than 2.5 seconds
+    } else {
+      setShowWakeUpNotice(false);
+    }
+    return () => clearTimeout(timer);
+  }, [loading]);
+
   useEffect(() => {
     fetchApprovedProperties();
   }, []);
@@ -136,8 +151,19 @@ const FindPG = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
+      <div className="min-h-screen bg-black flex flex-col items-center justify-center gap-5 px-6 text-center">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+        {showWakeUpNotice && (
+          <div className="max-w-md bg-zinc-950 border border-zinc-850 p-5 rounded-xl shadow-xl shadow-orange-500/5 animate-in fade-in slide-in-from-bottom duration-500">
+            <h3 className="text-sm font-bold text-orange-500 tracking-wide uppercase">Connecting to Server</h3>
+            <p className="text-xs text-zinc-400 mt-2 leading-relaxed">
+              We are waking up your database on the Render Free Tier. Since it goes to sleep after 15 minutes of inactivity, the very first load can take up to <strong>50 seconds</strong>.
+            </p>
+            <p className="text-xxs text-zinc-500 mt-2">
+              (Subsequent searches and actions will be completely instant once awake!)
+            </p>
+          </div>
+        )}
       </div>
     );
   }
